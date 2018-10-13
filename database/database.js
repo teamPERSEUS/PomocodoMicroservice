@@ -13,15 +13,15 @@ db.authenticate()
 	});
 
 const Intervals = db.define('interval', {
-	date: {
-		type: Sequelize.DATE,
-		defaultValue: Sequelize.NOW
+	git_id: {
+		type: Sequelize.STRING
 	},
+	date: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
 	user: Sequelize.STRING,
 	repo: Sequelize.STRING,
 	issue: Sequelize.STRING,
 	fileName: Sequelize.STRING,
-	interval: Sequelize.INTEGER,
+	intervalNum: Sequelize.INTEGER,
 	state: Sequelize.STRING,
 	time: Sequelize.INTEGER,
 	wordCount: Sequelize.INTEGER

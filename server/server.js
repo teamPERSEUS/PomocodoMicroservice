@@ -19,7 +19,14 @@ app.use((req, res, next) => {
 	next();
 });
 
+app.post('/test', (req, res) => {
+	console.log(req.body);
+	res.send(true);
+});
+
 app.post('/interval', (req, res) => {
+	// console.log(req.body.data);
+
 	var fields = ['issue', 'fileName', 'state'];
 	var dbResultArr = [];
 	var intervalData = req.body.data;
@@ -41,19 +48,20 @@ app.post('/interval', (req, res) => {
 
 	recurse(
 		{
-			interval: req.body.interval,
-			user: 'testuser',
-			repo: 'https://github.com/teamPERSEUS/PomoCodo-Extension.git'
+			intervalNum: req.body.interval,
+			user: req.body.userId,
+			repoUrl: req.body.gitRepoUrl,
+			git_id: req.body.gitId
 		},
 		intervalData,
 		0
 	);
 
-	// console.log(dbResultArr);
+	console.log(dbResultArr);
 	Intervals.bulkCreate(dbResultArr).then(() => {
 		console.log('Saved to DB!');
 		Axios.post(
-			`http://${process.env.HOST}:${process.env.ANALYTICS}/api/vsCode`,
+			`http://${process.env.HOST}:${process.env.ANALYTICS}/api/vsCodeMicro`,
 			{
 				data: dbResultArr
 			}
@@ -66,5 +74,7 @@ app.post('/interval', (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-	console.log(`App listening on port: ${process.env.PORT}`);
+	console.log(
+		`App listening on http://${process.env.HOST}:${process.env.PORT}`
+	);
 });
