@@ -51,7 +51,8 @@ app.post('/interval', (req, res) => {
 			intervalNum: req.body.interval,
 			user: req.body.userId,
 			repoUrl: req.body.gitRepoUrl,
-			git_id: req.body.gitId
+			git_id: req.body.gitId,
+			idleTime: req.body.idleTime
 		},
 		intervalData,
 		0

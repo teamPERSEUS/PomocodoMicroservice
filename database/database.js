@@ -18,13 +18,14 @@ const Intervals = db.define('interval', {
 	},
 	date: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
 	user: Sequelize.STRING,
-	repo: Sequelize.STRING,
+	repoUrl: Sequelize.STRING,
 	issue: Sequelize.STRING,
 	fileName: Sequelize.STRING,
 	intervalNum: Sequelize.INTEGER,
 	state: Sequelize.STRING,
 	time: Sequelize.INTEGER,
-	wordCount: Sequelize.INTEGER
+	wordCount: Sequelize.INTEGER,
+	idleTime: Sequelize.INTEGER
 });
 
 db.sync();
