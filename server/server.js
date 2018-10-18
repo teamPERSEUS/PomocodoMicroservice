@@ -1,3 +1,4 @@
+if (process.env.NODE_ENV !== 'production')
 require('dotenv').config();
 const Axios = require('axios');
 const express = require('express');
@@ -22,6 +23,16 @@ app.use((req, res, next) => {
 app.post('/test', (req, res) => {
 	console.log(req.body);
 	res.send(true);
+});
+
+app.get('/', (req, res) => {
+  Intervals.findAll().then(intervals => {
+    var intervalList = intervals.map(interval => {
+      return interval.get('id');
+    });
+    console.log(intervalList);
+    res.send(intervalList);
+  });
 });
 
 app.post('/interval', (req, res) => {

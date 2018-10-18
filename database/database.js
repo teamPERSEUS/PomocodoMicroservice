@@ -1,8 +1,11 @@
+if (process.env.NODE_ENV !== 'production')
+require('dotenv').config();
 const Sequelize = require('sequelize');
-var db = new Sequelize('vsCode', 'root', '', {
-	host: 'localhost',
-	dialect: 'mysql'
-});
+// var db = new Sequelize('vsCode', 'root', '', {
+// 	host: 'localhost',
+// 	dialect: 'mysql'
+// });
+var db = new Sequelize(process.env.DATABASE_URL);
 
 db.authenticate()
 	.then(() => {
