@@ -1,9 +1,13 @@
 if (process.env.NODE_ENV !== 'production')
-require('dotenv').config();
+	require('dotenv').config();
 const Axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Intervals } = require('../database/database');
+
+const analyticsURL = (process.env.NODE_ENV !== 'production')
+	? `http://${process.env.HOST}:${process.env.ANALYTICS}`
+	: process.env.ANALYTICS_SERVICE;
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,13 +30,13 @@ app.post('/test', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  Intervals.findAll().then(intervals => {
-    var intervalList = intervals.map(interval => {
-      return interval.get('id');
-    });
-    console.log(intervalList);
-    res.send(intervalList);
-  });
+	Intervals.findAll().then(intervals => {
+		var intervalList = intervals.map(interval => {
+			return interval.get('id');
+		});
+		console.log(intervalList);
+		res.send(intervalList);
+	});
 });
 
 app.post('/interval', (req, res) => {
@@ -41,7 +45,7 @@ app.post('/interval', (req, res) => {
 	var fields = ['issue', 'fileName', 'state'];
 	var dbResultArr = [];
 	var intervalData = req.body.data;
-	var recurse = function(dbObj, intervalData, index = 0) {
+	var recurse = function (dbObj, intervalData, index = 0) {
 		if (index === fields.length) {
 			for (var key in intervalData) {
 				dbObj[key] = intervalData[key];
@@ -51,7 +55,7 @@ app.post('/interval', (req, res) => {
 		}
 
 		var keys = Object.keys(intervalData);
-		keys.forEach(function(key) {
+		keys.forEach(function (key) {
 			dbObj[fields[index]] = key;
 			recurse(dbObj, intervalData[key], index + 1);
 		});
@@ -73,13 +77,13 @@ app.post('/interval', (req, res) => {
 	Intervals.bulkCreate(dbResultArr).then(() => {
 		console.log('Saved to DB!');
 		Axios.post(
-			`http://${process.env.HOST}:${process.env.ANALYTICS}/api/vsCodeMicro`,
+			`${analyticsURL}/api/vsCodeMicro`,
 			{
 				data: dbResultArr
 			}
 		)
 			.then(console.log('sent to Analytics server!'))
-			.catch(function(error) {
+			.catch(function (error) {
 				console.log(error + 'error sending to Analytics server');
 			});
 	});
